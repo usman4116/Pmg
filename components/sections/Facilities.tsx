@@ -1,201 +1,171 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { motion, AnimatePresence } from "framer-motion";
 import { facilitiesData } from "@/content/facilities";
-import { useReducedMotion } from "@/components/motion/useReducedMotion";
+import { cn } from "@/lib/utils";
 
 export const Facilities: React.FC = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const panelsRef = useRef<HTMLDivElement>(null);
-  const prefersReduced = useReducedMotion();
-
-  useEffect(() => {
-    if (prefersReduced || !containerRef.current || !panelsRef.current) return;
-    gsap.registerPlugin(ScrollTrigger);
-
-    const mm = gsap.matchMedia();
-
-    mm.add("(min-width: 768px)", () => {
-      const roomLayers = gsap.utils.toArray<HTMLElement>(".facility-room-layer");
-      const captions = gsap.utils.toArray<HTMLElement>(".facility-caption-block");
-
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top top",
-          end: "+=220%",
-          pin: true,
-          scrub: 1,
-          anticipatePin: 1,
-        },
-      });
-
-      // Layer 1 is visible by default
-      // Layer 2 wipes in from bottom
-      if (roomLayers[1]) {
-        tl.fromTo(
-          roomLayers[1],
-          { clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)" },
-          { clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)", ease: "power2.inOut" },
-          0.5
-        );
-        if (captions[0] && captions[1]) {
-          tl.to(captions[0], { opacity: 0, y: -30, ease: "power2.out" }, 0.4);
-          tl.fromTo(captions[1], { opacity: 0, y: 30 }, { opacity: 1, y: 0, ease: "power2.out" }, 0.6);
-        }
-      }
-
-      // Layer 3 wipes in from bottom
-      if (roomLayers[2]) {
-        tl.fromTo(
-          roomLayers[2],
-          { clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)" },
-          { clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)", ease: "power2.inOut" },
-          1.5
-        );
-        if (captions[1] && captions[2]) {
-          tl.to(captions[1], { opacity: 0, y: -30, ease: "power2.out" }, 1.4);
-          tl.fromTo(captions[2], { opacity: 0, y: 30 }, { opacity: 1, y: 0, ease: "power2.out" }, 1.6);
-        }
-      }
-    });
-
-    return () => mm.revert();
-  }, [prefersReduced]);
+  const [activeRoomIdx, setActiveRoomIdx] = useState(0);
+  const activeRoom = facilitiesData[activeRoomIdx];
 
   return (
     <section
       id="facilities"
-      ref={containerRef}
-      className="relative w-full min-h-screen transition-colors duration-500 overflow-hidden bg-[var(--ink)] text-[#F6F1E7]"
+      className="py-28 md:py-36 px-6 md:px-12 max-w-7xl mx-auto transition-colors duration-500"
       aria-label="Clinical Facilities and Architectural Environment"
     >
-      {/* Desktop Pinned Fullscreen Scene */}
-      <div className="hidden md:flex relative w-full h-screen flex-col justify-between p-12 lg:p-16">
-        {/* Top Header */}
-        <div className="relative z-20 flex items-baseline justify-between border-b border-white/15 pb-4">
-          <div className="flex items-center gap-4">
-            <span className="font-mono text-xs uppercase tracking-widest text-[var(--clay)]">
-              [ Act III · Architecture ]
-            </span>
-            <span className="w-8 h-[1px] bg-white/20" />
-            <h2 className="font-serif text-2xl tracking-tight text-white">
-              The Clinical Space
-            </h2>
-          </div>
-          <span className="font-mono text-xs text-white/50 uppercase">
-            Designed for Stillness & Acoustic Isolation
-          </span>
+      {/* Chapter Eyebrow Header */}
+      <div className="flex items-center gap-4 mb-4">
+        <span className="font-mono text-xs uppercase tracking-widest text-[var(--clay)]">
+          [ Act III · Architecture ]
+        </span>
+        <span className="w-12 h-[1px] bg-hairline" />
+        <span className="font-mono text-xs text-[var(--subtle)]">
+          Chapter 08 · The Clinical Space
+        </span>
+      </div>
+
+      <div className="flex flex-col md:flex-row md:items-end justify-between pb-10 border-b border-hairline gap-6">
+        <div>
+          <h2 className="font-serif text-4xl sm:text-5xl md:text-6xl tracking-tight text-[var(--foreground)]">
+            Designed for Stillness
+          </h2>
+          <p className="mt-3 text-sm md:text-base text-[var(--subtle)] max-w-lg">
+            A medical environment constructed with natural acoustics, HEPA H14 air exchange,
+            and circadian daylight balance.
+          </p>
         </div>
 
-        {/* Pinned Image Wipe Layers */}
-        <div
-          ref={panelsRef}
-          className="absolute inset-0 w-full h-full overflow-hidden"
-        >
-          {facilitiesData.map((room, idx) => (
-            <div
-              key={room.id}
-              className={`facility-room-layer absolute inset-0 w-full h-full ${
-                idx === 0 ? "z-10" : idx === 1 ? "z-20" : "z-30"
-              }`}
-              style={{
-                clipPath:
-                  idx === 0
-                    ? "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)"
-                    : undefined,
-              }}
-            >
-              <Image
-                src={room.image.src}
-                alt={room.image.alt}
-                fill
-                className="object-cover"
-                sizes="100vw"
-                priority={idx === 0}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[var(--ink)]/90 via-[var(--ink)]/40 to-transparent" />
-            </div>
-          ))}
-        </div>
-
-        {/* Bottom Captions Overlay */}
-        <div className="relative z-20 max-w-2xl mt-auto pt-8">
-          {facilitiesData.map((room, idx) => (
-            <div
-              key={room.id}
-              className={`facility-caption-block ${
-                idx === 0 ? "opacity-100" : "opacity-0 absolute bottom-0 left-0"
-              } transition-opacity duration-300 space-y-4`}
-            >
-              <div className="flex items-baseline gap-4">
-                <span className="font-mono text-sm text-[var(--clay)]">
-                  ROOM {room.numeral}
-                </span>
-                <span className="text-xs font-mono text-white/50 uppercase tracking-wider">
-                  {room.subtitle}
-                </span>
-              </div>
-
-              <h3 className="font-serif text-3xl lg:text-4xl text-white tracking-tight">
-                {room.title}
-              </h3>
-
-              <p className="text-sm lg:text-base text-white/80 leading-relaxed">
-                {room.caption}
-              </p>
-
-              <div className="flex flex-wrap gap-4 pt-2">
-                {room.specs.map((spec, sIdx) => (
-                  <span
-                    key={sIdx}
-                    className="font-mono text-xs text-white/70 bg-white/10 px-3 py-1 rounded border border-white/15"
-                  >
-                    {spec}
-                  </span>
-                ))}
-              </div>
-            </div>
-          ))}
+        {/* Room Tab Selectors */}
+        <div className="flex flex-wrap gap-2">
+          {facilitiesData.map((room, idx) => {
+            const isActive = activeRoomIdx === idx;
+            return (
+              <button
+                key={room.id}
+                type="button"
+                onClick={() => setActiveRoomIdx(idx)}
+                className={cn(
+                  "px-4 py-2 rounded-full text-xs font-mono tracking-wider uppercase transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--clay)]",
+                  isActive
+                    ? "bg-[var(--foreground)] text-[var(--sky)] font-bold shadow-sm"
+                    : "bg-transparent text-[var(--subtle)] border border-hairline hover:border-[var(--foreground)]"
+                )}
+              >
+                <span>{room.numeral} · {room.title.split(" ")[0]}</span>
+              </button>
+            );
+          })}
         </div>
       </div>
 
-      {/* Mobile Stacked Fallback */}
-      <div className="md:hidden py-20 px-6 space-y-16">
-        <div className="border-b border-white/15 pb-4 mb-8">
-          <span className="font-mono text-xs uppercase tracking-widest text-[var(--clay)] block mb-2">
-            [ Act III · Architecture ]
-          </span>
-          <h2 className="font-serif text-3xl text-white">The Clinical Space</h2>
-        </div>
+      {/* Main Suite Showcase Grid (Asymmetric Editorial Two-Column) */}
+      <div className="mt-12 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+        {/* Left: Interactive Large Image Frame */}
+        <div className="lg:col-span-7 relative">
+          <div className="relative aspect-[16/10] sm:aspect-[16/9] w-full rounded-xl overflow-hidden bg-[var(--foreground)]/5 border border-hairline shadow-md">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeRoom.id}
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 1.01 }}
+                transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                className="absolute inset-0 w-full h-full"
+              >
+                <Image
+                  src={activeRoom.image.src}
+                  alt={activeRoom.image.alt}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 60vw"
+                  priority
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[var(--sky)]/30 via-transparent to-transparent pointer-events-none" />
+              </motion.div>
+            </AnimatePresence>
 
-        {facilitiesData.map((room) => (
-          <div key={room.id} className="space-y-6 border-b border-white/10 pb-12">
-            <div className="relative aspect-[4/3] w-full rounded-md overflow-hidden bg-white/5 border border-white/10">
-              <Image
-                src={room.image.src}
-                alt={room.image.alt}
-                fill
-                className="object-cover"
-                sizes="100vw"
-              />
-            </div>
-
-            <div className="space-y-3">
-              <span className="font-mono text-xs text-[var(--clay)]">
-                ROOM {room.numeral}
-              </span>
-              <h3 className="font-serif text-2xl text-white">{room.title}</h3>
-              <p className="text-xs text-white/60">{room.subtitle}</p>
-              <p className="text-sm text-white/80 leading-relaxed">
-                {room.caption}
-              </p>
+            {/* Room Numeral Badge */}
+            <div className="absolute top-4 left-4 z-10 font-mono text-xs uppercase tracking-widest px-3 py-1 bg-[var(--sky)]/90 backdrop-blur-md rounded-full text-[var(--foreground)] border border-hairline">
+              Room {activeRoom.numeral} / 03
             </div>
           </div>
-        ))}
+        </div>
+
+        {/* Right: Suite Narrative & Specifications */}
+        <div className="lg:col-span-5 space-y-6">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeRoom.id}
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.35, ease: "easeOut" }}
+              className="space-y-6"
+            >
+              <div>
+                <span className="font-mono text-xs uppercase tracking-widest text-[var(--clay)] block mb-1">
+                  {activeRoom.subtitle}
+                </span>
+                <h3 className="font-serif text-2xl sm:text-3xl md:text-4xl text-[var(--foreground)] tracking-tight leading-snug">
+                  {activeRoom.title}
+                </h3>
+              </div>
+
+              <p className="text-sm md:text-base text-[var(--subtle)] leading-relaxed">
+                {activeRoom.caption}
+              </p>
+
+              {/* Technical Specifications Pills */}
+              <div className="pt-4 border-t border-hairline space-y-3">
+                <span className="font-mono text-[11px] uppercase tracking-wider text-[var(--subtle)] block">
+                  Acoustic & Environmental Standards:
+                </span>
+                <div className="flex flex-wrap gap-2">
+                  {activeRoom.specs.map((spec, sIdx) => (
+                    <span
+                      key={sIdx}
+                      className="font-mono text-xs text-[var(--foreground)] bg-[var(--foreground)]/5 px-3 py-1 rounded-md border border-hairline"
+                    >
+                      {spec}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Quick Room Pager Buttons */}
+          <div className="pt-6 flex items-center justify-between border-t border-hairline text-xs font-mono text-[var(--subtle)]">
+            <span>SUITE SPECIFICATIONS</span>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() =>
+                  setActiveRoomIdx((prev) =>
+                    prev === 0 ? facilitiesData.length - 1 : prev - 1
+                  )
+                }
+                className="p-2 rounded-full border border-hairline hover:border-[var(--foreground)] text-[var(--foreground)] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--clay)]"
+                aria-label="Previous facility room"
+              >
+                ←
+              </button>
+              <button
+                type="button"
+                onClick={() =>
+                  setActiveRoomIdx((prev) => (prev + 1) % facilitiesData.length)
+                }
+                className="p-2 rounded-full border border-hairline hover:border-[var(--foreground)] text-[var(--foreground)] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--clay)]"
+                aria-label="Next facility room"
+              >
+                →
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

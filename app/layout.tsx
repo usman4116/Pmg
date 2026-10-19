@@ -35,6 +35,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${fraunces.variable} ${geistSans.variable} h-full antialiased selection:bg-[var(--clay)] selection:text-[#F6F1E7]`}
     >
       <head>
@@ -52,7 +53,10 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
         />
       </head>
-      <body className="min-h-full flex flex-col bg-[var(--sky)] text-[var(--foreground)] font-sans">
+      <body
+        suppressHydrationWarning
+        className="min-h-full flex flex-col bg-[var(--sky)] text-[var(--foreground)] font-sans"
+      >
         {/* Subtle SVG Noise Grain Overlay */}
         <div className="grain-overlay" aria-hidden="true" />
 

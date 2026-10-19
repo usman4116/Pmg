@@ -12,7 +12,7 @@ export const Services: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const progressBarRef = useRef<HTMLDivElement>(null);
-  const [activeIdx, setActiveIdx] = useState(0);
+  const activeNumeralRef = useRef<HTMLSpanElement>(null);
   const prefersReduced = useReducedMotion();
 
   useEffect(() => {
@@ -41,12 +41,14 @@ export const Services: React.FC = () => {
             if (progressBarRef.current) {
               progressBarRef.current.style.transform = `scaleX(${self.progress})`;
             }
-            // Update active index
-            const current = Math.min(
-              totalPanels - 1,
-              Math.floor(self.progress * totalPanels)
-            );
-            setActiveIdx(current);
+            // Update active numeral directly without triggering React re-renders
+            if (activeNumeralRef.current) {
+              const current = Math.min(
+                totalPanels,
+                Math.max(1, Math.floor(self.progress * totalPanels) + 1)
+              );
+              activeNumeralRef.current.textContent = current < 10 ? `0${current}` : `${current}`;
+            }
           },
         },
       });
@@ -97,8 +99,8 @@ export const Services: React.FC = () => {
 
         <div className="hidden md:flex items-center gap-3 font-mono text-xs text-[var(--subtle)]">
           <span>CHAPTER</span>
-          <span className="font-bold text-[var(--foreground)]">
-            {servicesData[activeIdx]?.numeral || "01"}
+          <span ref={activeNumeralRef} className="font-bold text-[var(--foreground)]">
+            01
           </span>
           <span>/ 08</span>
         </div>

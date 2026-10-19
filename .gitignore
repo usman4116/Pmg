@@ -40,3 +40,4 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+gemini_generated_video_*.mp4

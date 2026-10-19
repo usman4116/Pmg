@@ -12,93 +12,94 @@ export default function SkyTimeline() {
     gsap.registerPlugin(ScrollTrigger);
 
     if (prefersReduced) {
-      // In reduced motion, avoid scroll-driven background interpolation
-      document.documentElement.style.setProperty("--sky", "#0E1512");
-      document.documentElement.style.setProperty("--foreground", "#F6F1E7");
+      document.documentElement.style.setProperty("--sky", "#F8F5F0");
+      document.documentElement.style.setProperty("--foreground", "#0E1512");
+      document.documentElement.style.setProperty("--subtle", "#2F4A3C");
+      document.documentElement.style.setProperty("--hairline", "rgba(14, 21, 18, 0.12)");
       return;
     }
 
-    // Act triggers:
-    // Act I: Hero + Intro (Night -> Deep Ink)
-    // Act II: Services + Why Us (Dawn -> Warm Amber)
-    // Act III: Conditions + Team + Testimonials + Insurance + Facilities + FAQ (Daylight -> Paper White)
-    // Act IV: Booking CTA + Footer (Evening -> Deep Night/Ink)
+    // Four subtle light act transitions:
+    // Act I: Hero + Intro → #F8F5F0 (Morning Alabaster)
+    // Act II: Services + Why Us → #F2EADF (Warm Soft Amber/Linen)
+    // Act III: Conditions + Team + Testimonials + Insurance + Facilities + FAQ → #FAF7F2 (Pure Paper Daylight)
+    // Act IV: Booking CTA + Footer → #EFE7DC (Warm Golden Dusk Parchment)
 
     const ctx = gsap.context(() => {
-      // Transition to Act II (Dawn) when entering Services
+      // Transition to Act II (Warm Linen) when entering Services
       ScrollTrigger.create({
         trigger: "#services",
         start: "top 60%",
         end: "bottom 40%",
         onEnter: () => {
           gsap.to("html", {
-            "--sky": "#F2D9B8",
+            "--sky": "#F2EADF",
             "--foreground": "#0E1512",
             "--subtle": "#2F4A3C",
-            "--hairline": "rgba(14, 21, 18, 0.16)",
-            duration: 1.2,
+            "--hairline": "rgba(14, 21, 18, 0.14)",
+            duration: 1.0,
             ease: "power2.out",
           });
         },
         onLeaveBack: () => {
           gsap.to("html", {
-            "--sky": "#0E1512",
-            "--foreground": "#F6F1E7",
-            "--subtle": "rgba(246, 241, 231, 0.70)",
-            "--hairline": "rgba(246, 241, 231, 0.14)",
-            duration: 1.2,
+            "--sky": "#F8F5F0",
+            "--foreground": "#0E1512",
+            "--subtle": "#2F4A3C",
+            "--hairline": "rgba(14, 21, 18, 0.12)",
+            duration: 1.0,
             ease: "power2.out",
           });
         },
       });
 
-      // Transition to Act III (Daylight) when entering Conditions
+      // Transition to Act III (Luminous Paper Daylight) when entering Conditions
       ScrollTrigger.create({
         trigger: "#conditions",
         start: "top 60%",
         onEnter: () => {
           gsap.to("html", {
-            "--sky": "#F6F1E7",
+            "--sky": "#FAF7F2",
             "--foreground": "#0E1512",
             "--subtle": "#2F4A3C",
-            "--hairline": "rgba(14, 21, 18, 0.14)",
-            duration: 1.2,
+            "--hairline": "rgba(14, 21, 18, 0.12)",
+            duration: 1.0,
             ease: "power2.out",
           });
         },
         onLeaveBack: () => {
           gsap.to("html", {
-            "--sky": "#F2D9B8",
+            "--sky": "#F2EADF",
             "--foreground": "#0E1512",
             "--subtle": "#2F4A3C",
-            "--hairline": "rgba(14, 21, 18, 0.16)",
-            duration: 1.2,
+            "--hairline": "rgba(14, 21, 18, 0.14)",
+            duration: 1.0,
             ease: "power2.out",
           });
         },
       });
 
-      // Transition to Act IV (Evening) when entering Booking CTA
+      // Transition to Act IV (Warm Dusk Parchment) when entering Booking CTA
       ScrollTrigger.create({
         trigger: "#booking",
         start: "top 60%",
         onEnter: () => {
           gsap.to("html", {
-            "--sky": "#121A1F",
-            "--foreground": "#F6F1E7",
-            "--subtle": "rgba(246, 241, 231, 0.70)",
-            "--hairline": "rgba(246, 241, 231, 0.14)",
-            duration: 1.4,
+            "--sky": "#EFE7DC",
+            "--foreground": "#0E1512",
+            "--subtle": "#2F4A3C",
+            "--hairline": "rgba(14, 21, 18, 0.14)",
+            duration: 1.0,
             ease: "power2.out",
           });
         },
         onLeaveBack: () => {
           gsap.to("html", {
-            "--sky": "#F6F1E7",
+            "--sky": "#FAF7F2",
             "--foreground": "#0E1512",
             "--subtle": "#2F4A3C",
-            "--hairline": "rgba(14, 21, 18, 0.14)",
-            duration: 1.2,
+            "--hairline": "rgba(14, 21, 18, 0.12)",
+            duration: 1.0,
             ease: "power2.out",
           });
         },

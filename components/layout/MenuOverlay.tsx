@@ -88,10 +88,10 @@ export const MenuOverlay: React.FC<MenuOverlayProps> = ({ isOpen, onClose }) => 
       role="dialog"
       aria-modal="true"
       aria-label="Site Navigation Menu"
-      className="fixed inset-0 z-[5000] flex flex-col justify-between bg-[var(--ink)] text-[#F6F1E7] p-6 md:p-12 lg:p-16 overflow-y-auto"
+      className="fixed inset-0 z-[5000] flex flex-col justify-between bg-[#FAF7F2] text-[#0E1512] p-6 md:p-12 lg:p-16 overflow-y-auto"
     >
       {/* Top Bar inside Menu */}
-      <div className="flex items-center justify-between border-b border-white/10 pb-6">
+      <div className="flex items-center justify-between border-b border-black/10 pb-6">
         <a
           href="#hero"
           onClick={onClose}
@@ -113,7 +113,7 @@ export const MenuOverlay: React.FC<MenuOverlayProps> = ({ isOpen, onClose }) => 
           <button
             onClick={onClose}
             type="button"
-            className="p-2 text-xs font-mono uppercase tracking-widest text-[#F6F1E7]/70 hover:text-white transition-colors"
+            className="p-2 text-xs font-mono uppercase tracking-widest text-[#0E1512]/70 hover:text-[var(--clay)] transition-colors"
             aria-label="Close Navigation Menu"
           >
             [ Close × ]
@@ -131,9 +131,9 @@ export const MenuOverlay: React.FC<MenuOverlayProps> = ({ isOpen, onClose }) => 
             <a
               href={item.href}
               onClick={onClose}
-              className="nav-line-inner group flex items-baseline gap-4 py-2 border-b border-transparent hover:border-white/20 transition-all duration-200"
+              className="nav-line-inner group flex items-baseline gap-4 py-2 border-b border-transparent hover:border-black/20 transition-all duration-200"
             >
-              <span className="font-mono text-xs text-white/40 group-hover:text-[var(--clay)] transition-colors">
+              <span className="font-mono text-xs text-[#0E1512]/40 group-hover:text-[var(--clay)] transition-colors">
                 {item.chapter}
               </span>
               <span className="font-serif text-3xl md:text-4xl lg:text-5xl font-light tracking-tight group-hover:translate-x-2 transition-transform duration-300">
@@ -145,19 +145,19 @@ export const MenuOverlay: React.FC<MenuOverlayProps> = ({ isOpen, onClose }) => 
       </div>
 
       {/* Footer Info inside Menu */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 border-t border-white/10 text-xs text-white/60">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 border-t border-black/10 text-xs text-[#0E1512]/70">
         <div>
-          <p className="font-mono uppercase tracking-wider text-white/40 mb-1">Clinic</p>
+          <p className="font-mono uppercase tracking-wider text-[#0E1512]/40 mb-1">Clinic</p>
           <p>{siteConfig.address.street}</p>
           <p>{siteConfig.address.suite}, {siteConfig.address.city}, {siteConfig.address.state} {siteConfig.address.zip}</p>
         </div>
         <div>
-          <p className="font-mono uppercase tracking-wider text-white/40 mb-1">Hours</p>
+          <p className="font-mono uppercase tracking-wider text-[#0E1512]/40 mb-1">Hours</p>
           <p>{siteConfig.hours.weekdays}</p>
           <p>{siteConfig.hours.saturday}</p>
         </div>
         <div>
-          <p className="font-mono uppercase tracking-wider text-white/40 mb-1">Emergency</p>
+          <p className="font-mono uppercase tracking-wider text-[#0E1512]/40 mb-1">Emergency</p>
           <p>{siteConfig.emergencyNotice}</p>
         </div>
       </div>

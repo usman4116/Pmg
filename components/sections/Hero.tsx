@@ -6,7 +6,6 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { siteConfig } from "@/content/site";
 import { useReducedMotion } from "@/components/motion/useReducedMotion";
-import { motionTokens } from "@/lib/motion";
 
 export const Hero: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -37,12 +36,12 @@ export const Hero: React.FC = () => {
     const mm = gsap.matchMedia();
 
     mm.add("(min-width: 768px)", () => {
-      // Desktop: Pinned scrubbed scale-down of the cinematic video into a rounded frame
+      // Desktop: Pinned scrubbed scale-down of the video frame
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top top",
-          end: "+=120%",
+          end: "+=110%",
           pin: true,
           scrub: 1,
           anticipatePin: 1,
@@ -54,7 +53,7 @@ export const Hero: React.FC = () => {
         textContentRef.current,
         {
           opacity: 0,
-          y: -60,
+          y: -50,
           ease: "power2.inOut",
         },
         0
@@ -64,8 +63,8 @@ export const Hero: React.FC = () => {
       tl.to(
         videoWrapperRef.current,
         {
-          scale: 0.88,
-          borderRadius: "28px",
+          scale: 0.90,
+          borderRadius: "24px",
           ease: "power2.inOut",
         },
         0
@@ -79,7 +78,7 @@ export const Hero: React.FC = () => {
     <section
       id="hero"
       ref={containerRef}
-      className="relative w-full h-screen min-h-[700px] flex items-center justify-center overflow-hidden bg-[var(--ink)]"
+      className="relative w-full h-screen min-h-[700px] flex items-center justify-center overflow-hidden bg-[var(--sky)] transition-colors duration-500"
       aria-label="Hero Scene: A Day of Breath"
     >
       {/* Scalable Video Frame */}
@@ -117,12 +116,12 @@ export const Hero: React.FC = () => {
           />
         )}
 
-        {/* Video Gradient Mask (natural blend into ink background) */}
+        {/* Video Gradient Mask (natural blend into warm light paper background) */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
             background:
-              "linear-gradient(to top, rgba(14,21,18,0.96) 0%, rgba(14,21,18,0.65) 35%, rgba(14,21,18,0.2) 70%, rgba(14,21,18,0.4) 100%)",
+              "linear-gradient(to top, rgba(248,245,240,0.96) 0%, rgba(248,245,240,0.7) 40%, rgba(248,245,240,0.25) 75%, rgba(248,245,240,0.45) 100%)",
           }}
         />
       </div>
@@ -134,13 +133,13 @@ export const Hero: React.FC = () => {
       >
         {/* Eyebrow Chapter */}
         <div className="overflow-hidden mb-4">
-          <p className="font-mono text-xs uppercase tracking-[0.25em] text-[#F6F1E7]/70">
-            [ Act I · Night to Dawn ]
+          <p className="font-mono text-xs uppercase tracking-[0.25em] text-[var(--clay)] font-semibold">
+            [ Act I · The Baseline ]
           </p>
         </div>
 
-        {/* Masked Headline */}
-        <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tight text-[#F6F1E7] font-normal leading-[1.08] max-w-4xl">
+        {/* Masked Headline in Deep Ink Typography */}
+        <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tight text-[var(--foreground)] font-normal leading-[1.08] max-w-4xl">
           <span className="block overflow-hidden">
             <span className="inline-block animate-hero-line-1">
               The first breath of morning
@@ -154,7 +153,7 @@ export const Hero: React.FC = () => {
         </h1>
 
         {/* Lead Subtitle */}
-        <p className="mt-8 max-w-2xl font-sans text-base sm:text-lg md:text-xl text-[#F6F1E7]/80 leading-relaxed font-light">
+        <p className="mt-8 max-w-2xl font-sans text-base sm:text-lg md:text-xl text-[var(--foreground)]/80 leading-relaxed font-light">
           Board-certified pulmonary, sleep, and restorative primary care.
           Unhurried medicine in a clinical space built for quiet precision.
         </p>
@@ -166,14 +165,14 @@ export const Hero: React.FC = () => {
             target="_blank"
             rel="noopener noreferrer"
             data-cursor="Book"
-            className="px-8 py-4 rounded-full text-xs font-sans uppercase tracking-widest bg-[#F6F1E7] text-[var(--ink)] hover:bg-white hover:scale-105 active:scale-95 transition-all duration-300 font-medium shadow-lg"
+            className="px-8 py-4 rounded-full text-xs font-sans uppercase tracking-widest bg-[var(--clay)] text-[#F6F1E7] hover:bg-[#B35838] hover:scale-105 active:scale-95 transition-all duration-300 font-medium shadow-md"
           >
             Book a visit
           </a>
 
           <a
             href="#services"
-            className="text-xs font-sans tracking-widest uppercase text-[#F6F1E7]/75 hover:text-[#F6F1E7] transition-colors underline underline-offset-8"
+            className="text-xs font-sans tracking-widest uppercase text-[var(--foreground)]/75 hover:text-[var(--foreground)] transition-colors underline underline-offset-8"
           >
             See what we treat ↓
           </a>
@@ -182,11 +181,11 @@ export const Hero: React.FC = () => {
 
       {/* Quiet bottom indicator */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 opacity-60 pointer-events-none">
-        <span className="font-mono text-[10px] tracking-widest uppercase text-[#F6F1E7]">
+        <span className="font-mono text-[10px] tracking-widest uppercase text-[var(--foreground)] font-medium">
           Scroll to breathe
         </span>
-        <div className="w-[1px] h-6 bg-[#F6F1E7]/30 overflow-hidden relative">
-          <div className="w-full h-full bg-[#F6F1E7] animate-pulse" />
+        <div className="w-[1px] h-6 bg-[var(--hairline)] overflow-hidden relative">
+          <div className="w-full h-full bg-[var(--clay)] animate-pulse" />
         </div>
       </div>
     </section>
