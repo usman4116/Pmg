@@ -32,7 +32,6 @@ const nextConfig: NextConfig = {
     unoptimized: true,
   },
   turbopack: {
-    root: "/home/usmanfarhan/Documents/Medical",
     rules: {
       "*.css": {
         loaders: ["@tailwindcss/turbopack"],
