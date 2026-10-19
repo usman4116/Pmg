@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -10,22 +10,16 @@ import { useReducedMotion } from "@/components/motion/useReducedMotion";
 export const Hero: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const videoWrapperRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const textContentRef = useRef<HTMLDivElement>(null);
-  const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
   const prefersReduced = useReducedMotion();
 
+  // Ensure video autoplay begins smoothly
   useEffect(() => {
-    // Check Save-Data or slow connection
-    interface NetworkInfo {
-      saveData?: boolean;
-      effectiveType?: string;
-    }
-    const navConn = (navigator as unknown as { connection?: NetworkInfo }).connection;
-    const isSaveData = navConn?.saveData === true;
-    const isSlowConn = navConn?.effectiveType === "2g" || navConn?.effectiveType === "slow-2g";
-
-    if (!prefersReduced && !isSaveData && !isSlowConn) {
-      setShouldLoadVideo(true);
+    if (videoRef.current && !prefersReduced) {
+      videoRef.current.play().catch(() => {
+        // Autoplay policy fallback handled gracefully
+      });
     }
   }, [prefersReduced]);
 
@@ -86,13 +80,14 @@ export const Hero: React.FC = () => {
         ref={videoWrapperRef}
         className="absolute inset-0 w-full h-full overflow-hidden will-change-transform origin-center transition-shadow duration-700"
       >
-        {shouldLoadVideo ? (
+        {!prefersReduced ? (
           <video
+            ref={videoRef}
             autoPlay
             loop
             muted
             playsInline
-            preload="metadata"
+            preload="auto"
             poster="/video/poster.jpg"
             className="w-full h-full object-cover select-none"
             aria-hidden="true"
@@ -102,7 +97,6 @@ export const Hero: React.FC = () => {
               type="video/mp4"
               media="(max-width: 767px)"
             />
-            <source src="/video/hero.webm" type="video/webm" />
             <source src="/video/hero.mp4" type="video/mp4" />
           </video>
         ) : (
@@ -116,12 +110,12 @@ export const Hero: React.FC = () => {
           />
         )}
 
-        {/* Video Gradient Mask (natural blend into warm light paper background) */}
+        {/* Video Gradient Mask (calibrated for vivid video visibility + crisp text contrast) */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
             background:
-              "linear-gradient(to top, rgba(248,245,240,0.96) 0%, rgba(248,245,240,0.7) 40%, rgba(248,245,240,0.25) 75%, rgba(248,245,240,0.45) 100%)",
+              "linear-gradient(to top, rgba(248,245,240,0.85) 0%, rgba(248,245,240,0.32) 42%, rgba(248,245,240,0.06) 70%, rgba(248,245,240,0.18) 100%)",
           }}
         />
       </div>
@@ -153,7 +147,7 @@ export const Hero: React.FC = () => {
         </h1>
 
         {/* Lead Subtitle */}
-        <p className="mt-8 max-w-2xl font-sans text-base sm:text-lg md:text-xl text-[var(--foreground)]/80 leading-relaxed font-light">
+        <p className="mt-8 max-w-2xl font-sans text-base sm:text-lg md:text-xl text-[var(--foreground)]/85 leading-relaxed font-light">
           Board-certified pulmonary, sleep, and restorative primary care.
           Unhurried medicine in a clinical space built for quiet precision.
         </p>
