@@ -28,6 +28,9 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  images: {
+    unoptimized: true,
+  },
   turbopack: {
     root: "/home/usmanfarhan/Documents/Medical",
     rules: {
